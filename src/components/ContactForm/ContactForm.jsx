@@ -28,7 +28,7 @@ const ContactForm = () => {
     if (existingContact) {
       alert(`"${values.name}" in already in contacts.`);
     } else {
-      console.log(dispatch(addContact(values)));
+      dispatch(addContact(values));
       setValues({ name: '', number: '' });
     }
   };
