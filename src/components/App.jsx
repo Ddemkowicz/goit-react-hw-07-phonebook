@@ -1,18 +1,25 @@
 import { useEffect } from 'react';
-import Storage from 'utils/storage';
+// import Storage from 'utils/storage';
 import ContactForm from './ContactForm/ContactForm';
 import ContactList from './ContactList/ContactList';
 import Filter from './Filter/Filter';
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { getContacts } from 'redux/selectors';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectIsLoading, selectError } from 'redux/selectors';
+import { getContacts } from 'redux/operations';
 
 const App = () => {
-  const contacts = useSelector(getContacts);
+  // const contacts = useSelector(getContacts);
+  const dispatch = useDispatch();
+  const isLoading = useSelector(selectIsLoading);
+  const error = useSelector(selectError);
+  // useEffect(() => Storage.setContacts(contacts), [contacts]);
 
-  useEffect(() => Storage.setContacts(contacts), [contacts]);
+  useEffect(() => {
+    dispatch(getContacts());
+  }, [dispatch]);
 
   return (
     <div
@@ -29,6 +36,7 @@ const App = () => {
     >
       <ContactForm />
       <Filter />
+      {isLoading && !error && <b>Request in progress...</b>}
       <ContactList />
     </div>
   );

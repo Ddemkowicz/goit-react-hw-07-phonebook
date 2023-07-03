@@ -1,19 +1,31 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteContact } from 'redux/contactsSlice';
-import { getContacts, getFilter } from 'redux/selectors';
+import { getContacts, deleteContact } from 'redux/operations';
+// import { deleteContact } from 'redux/contactsSlice';
+import { selectContacts, selectFilter, selectIsLoading } from 'redux/selectors';
 
 const ContactList = () => {
   const dispatch = useDispatch();
-  const contacts = useSelector(getContacts);
-  const filter = useSelector(getFilter);
+  const contacts = useSelector(selectContacts);
+  const filter = useSelector(selectFilter);
+  // const isLoading = useSelector(selectIsLoading);
 
-  const handleDelete = id => dispatch(deleteContact(id));
+  const handleDelete = e => {
+    const id = e.currentTarget.dataset.id;
+    dispatch(deleteContact(id));
+    console.log(dispatch(deleteContact(id)));
+  };
+
+  useEffect(() => {
+    dispatch(getContacts());
+  }, [dispatch]);
 
   const contactsFilter = contacts.filter(contact =>
     contact.name.toLowerCase().includes(filter.toLowerCase())
   );
+
+  const button = () => console.log(dispatch(getContacts()));
 
   return (
     <>
@@ -22,12 +34,15 @@ const ContactList = () => {
         {contactsFilter.map(contact => (
           <li key={contact.id}>
             {contact.name} : {contact.number}
-            <button onClick={() => handleDelete(contact.id)} type="button">
+            <button onClick={handleDelete} type="button" data-id={contact.id}>
               Delete
             </button>
           </li>
         ))}
       </ul>
+      <button onClick={button} type="button">
+        LOG
+      </button>
     </>
   );
 };

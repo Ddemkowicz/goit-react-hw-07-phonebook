@@ -3,8 +3,8 @@ import css from './ContactForm.module.css';
 import React from 'react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getContacts } from 'redux/selectors';
-import { addContact } from 'redux/contactsSlice';
+import { selectContacts } from 'redux/selectors';
+import { addContact } from 'redux/operations';
 
 const ContactForm = () => {
   const [values, setValues] = useState({
@@ -12,7 +12,7 @@ const ContactForm = () => {
     number: '',
   });
 
-  const contacts = useSelector(getContacts);
+  const contacts = useSelector(selectContacts);
 
   const dispatch = useDispatch();
 
@@ -28,7 +28,7 @@ const ContactForm = () => {
     if (existingContact) {
       alert(`"${values.name}" in already in contacts.`);
     } else {
-      dispatch(addContact(values.name, values.number));
+      console.log(dispatch(addContact(values)));
       setValues({ name: '', number: '' });
     }
   };
